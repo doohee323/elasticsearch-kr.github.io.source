@@ -75,7 +75,6 @@ docpadConfig =
       # Merge the document keywords with the site keywords
       @site.keywords.concat(@document.keywords or []).join(', ')
 
-
   # Collections
   # ===========
   # These are special collections that our website makes available to us
@@ -99,6 +98,10 @@ docpadConfig =
   # Configure Plugins
   # Should contain the plugin short names on the left, and the configuration to pass the plugin on the right
   plugins:
+    cleanurls:
+      static: true
+      trailingSlashes: true
+
     ghpages:
       deployRemote: 'target'
       deployBranch: 'master'

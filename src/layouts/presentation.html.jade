@@ -10,11 +10,17 @@ html(lang='en')
     meta(name='author', content=site.author || '')
     meta(name='apple-mobile-web-app-capable', content='yes')
     meta(name='apple-mobile-web-app-status-bar-style', content='black-translucent')
+
+    != getBlock('meta').toHTML()
+
     meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
     link(rel='stylesheet', href='/dependencies/reveal.js/css/reveal.min.css')
     link#theme(rel='stylesheet', href='/dependencies/reveal.js/css/theme/#{theme}.css')
     // For syntax highlighting
     link(rel='stylesheet', href='/dependencies/reveal.js/lib/css/zenburn.css')
+
+    != getBlock('styles').toHTML()
+
     // If the query includes 'print-pdf', include the PDF print sheet
     script.
       if( window.location.search.match( /print-pdf/gi ) ) {
@@ -31,6 +37,8 @@ html(lang='en')
     .reveal
       // Any section element inside of this container is displayed as a slide
       .slides!= content
+
+    != getBlock('scripts').toHTML()
 
     script(src='/dependencies/reveal.js/lib/js/head.min.js')
     script(src='/dependencies/reveal.js/js/reveal.min.js')
@@ -58,23 +66,25 @@ html(lang='en')
         ]
       });
 
-      Reveal.addEventListener('ready', function(event) {
-        ga('send', 'pageview', {
-          'page': '#{document.url}?h=' + event.indexh + '&v=' + event.indexv,
-          'title': '#{document.title}'
+    if 'static' === getEnvironment()
+      script.
+        Reveal.addEventListener('ready', function(event) {
+          ga('send', 'pageview', {
+            'page': '#{document.url}?h=' + event.indexh + '&v=' + event.indexv,
+            'title': '#{document.title}'
+          });
         });
-      });
-      Reveal.addEventListener('slidechanged', function(event) {
-        ga('send', 'pageview', {
-          'page': '#{document.url}?h=' + event.indexh + '&v=' + event.indexv,
-          'title': '#{document.title}'
+        Reveal.addEventListener('slidechanged', function(event) {
+          ga('send', 'pageview', {
+            'page': '#{document.url}?h=' + event.indexh + '&v=' + event.indexv,
+            'title': '#{document.title}'
+          });
         });
-      });
 
-    script.
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', '#{site.google.analytics.trackingId}', 'auto');
-      ga('require', 'displayfeatures');
+      script.
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', '#{site.google.analytics.trackingId}', 'auto');
+        ga('require', 'displayfeatures');
